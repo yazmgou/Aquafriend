@@ -1,0 +1,74 @@
+﻿<div class="sidebar">
+  <div class="profile">
+    <div class="who">
+      <div class="name">{{ displayName$ | async }}</div>
+      <div class="role">{{ role$ | async }}</div>
+    </div>
+  </div>
+
+  <a class="nav-item"
+    routerLink="/dashboard/home"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+    (click)="handleClick()">
+    <span class="msr">home</span><span>Inicio</span>
+  </a>
+
+  <a class="nav-item"
+    routerLink="/dashboard/user"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+    (click)="handleClick()">
+    <span class="msr">admin_panel_settings</span><span>Usuarios</span>
+  </a>
+
+  <a class="nav-item"
+    routerLink="/dashboard/peces"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+    (click)="handleClick()">
+    <span class="msr">water_drop</span><span>Peces</span>
+  </a>
+
+  <a class="nav-item"
+    routerLink="/dashboard/animales"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+    (click)="handleClick()">
+    <span class="msr">pets</span><span>Animales</span>
+  </a>
+
+  <a class="nav-item"
+    routerLink="/dashboard/reptiles"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+    (click)="handleClick()">
+    <span class="msr">bug_report</span><span>Reptiles</span>
+  </a>
+
+  <a class="nav-item"
+    routerLink="/dashboard/reservas"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+    (click)="handleClick()">
+    <span class="msr">checklist</span><span>Reservas</span>
+  </a>
+
+  <a class="nav-item"
+    routerLink="/dashboard/contactos"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+    (click)="handleClick()">
+    <span class="msr">mail</span><span>Contactos</span>
+  </a>
+
+  <div class="spacer"></div>
+
+  <a class="nav-item logout"
+    href="#"
+    (click)="logout($event)">
+    <span class="msr">logout</span><span>Cerrar sesión</span>
+  </a>
+</div>
+
+

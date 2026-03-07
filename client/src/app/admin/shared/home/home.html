@@ -1,0 +1,303 @@
+<section class="hero">
+  <div class="hero__bg">
+    <video class="hero__image" autoplay loop muted playsinline>
+      <source src="/assets/videos/video_panel.mp4" type="video/mp4">
+    </video>
+  </div>
+
+  <div class="hero__overlay"></div>
+
+  <div class="hero__content">
+    <h1 class="hero__title">Bienvenido a AquaFriend Panel</h1>
+    <p class="hero__subtitle">Gestiona contenido, información operativa y la oferta educativa.</p>
+  </div>
+</section>
+
+<section class="dashboard-section reservations-dashboard">
+  <div class="dashboard__header">
+    <div>
+      <p class="eyebrow">Operación diaria</p>
+      <h2>Monitoreo de reservas educativas</h2>
+      <p class="muted">
+        Métricas conectadas a la tabla <code>reserva</code>.
+        <span *ngIf="reservationsUpdated() as updated">
+          Última actualización: {{ updated | date:'short' }}
+        </span>
+      </p>
+    </div>
+    <button class="refresh-btn" type="button" (click)="loadReservationsDashboard()" [disabled]="reservationsLoading()">
+      <span *ngIf="!reservationsLoading(); else refreshRes">Actualizar</span>
+      <ng-template #refreshRes>Cargando...</ng-template>
+    </button>
+  </div>
+
+  <div *ngIf="reservationsError()" class="dashboard__alert">
+    {{ reservationsError() }}
+  </div>
+
+  <div class="kpi-grid" *ngIf="reservationsDashboard() as reservas">
+    <article class="kpi-card kpi-card--primary">
+      <span class="kpi-label">Total de reservas</span>
+      <strong class="kpi-value">{{ reservas.totals.overall }}</strong>
+      <p class="kpi-desc">Registros acumulados.</p>
+    </article>
+    <article class="kpi-card">
+      <span class="kpi-label">Reservas del mes</span>
+      <strong class="kpi-value">{{ reservas.totals.currentMonth }}</strong>
+      <p class="kpi-desc">Según fecha reservada.</p>
+    </article>
+    <article class="kpi-card">
+      <span class="kpi-label">Facturado del mes</span>
+      <strong class="kpi-value">{{ reservas.totals.revenueMonth | currency:'CLP':'symbol':'1.0-0' }}</strong>
+      <p class="kpi-desc">Total estimado (bruto + IVA).</p>
+    </article>
+    <article class="kpi-card">
+      <span class="kpi-label">Estudiantes inscritos</span>
+      <strong class="kpi-value">{{ reservas.totals.studentsMonth }}</strong>
+      <p class="kpi-desc">Mes en curso.</p>
+    </article>
+  </div>
+
+  <div class="status-list" *ngIf="reservationsDashboard()?.status?.length">
+    <div class="status-pill" *ngFor="let estado of reservationsDashboard()?.status">
+      <span class="status-pill__label">{{ estado.estado }}</span>
+      <strong>{{ estado.total }}</strong>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+    <article class="chart-card">
+      <header>
+        <h3>Reservas por estado</h3>
+        <p>Distribución de solicitudes activas.</p>
+      </header>
+      <ng-container *ngIf="reservationStatusChartData().labels?.length; else noStatusData">
+        <canvas
+          baseChart
+          [data]="reservationStatusChartData()"
+          [options]="pieChartOptions"
+          [type]="'doughnut'">
+        </canvas>
+      </ng-container>
+      <ng-template #noStatusData>
+        <p class="empty-state">Sin datos suficientes para graficar.</p>
+      </ng-template>
+    </article>
+
+    <article class="chart-card">
+      <header>
+        <h3>Reservas por mes</h3>
+        <p>Evolución de los últimos 6 meses.</p>
+      </header>
+      <ng-container *ngIf="reservationMonthlyChartData().labels?.length; else noMonthlyRes">
+        <canvas
+          baseChart
+          [data]="reservationMonthlyChartData()"
+          [options]="reservationMonthlyOptions"
+          [type]="'line'">
+        </canvas>
+      </ng-container>
+      <ng-template #noMonthlyRes>
+        <p class="empty-state">No existen registros recientes.</p>
+      </ng-template>
+    </article>
+
+    <article class="chart-card chart-card--wide">
+      <header>
+        <h3>Ingresos proyectados</h3>
+        <p>Total facturado por mes (CLP).</p>
+      </header>
+      <ng-container *ngIf="reservationRevenueChartData().labels?.length; else noRevenue">
+        <canvas
+          baseChart
+          [data]="reservationRevenueChartData()"
+          [options]="revenueChartOptions"
+          [type]="'bar'">
+        </canvas>
+      </ng-container>
+      <ng-template #noRevenue>
+        <p class="empty-state">Aún no hay información de ingresos.</p>
+      </ng-template>
+    </article>
+  </div>
+
+  <article class="table-card" *ngIf="reservationsDashboard() as reservasTable">
+    <header>
+      <div>
+        <p class="eyebrow">Seguimiento rápido</p>
+        <h3>Reservas recientes</h3>
+      </div>
+    </header>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Escuela</th>
+            <th>Programa</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Estudiantes</th>
+            <th>Monto</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let reserva of reservasTable.recent; trackBy: trackReservation">
+            <td>{{ reserva.escuela }}</td>
+            <td>{{ reserva.programa }}</td>
+            <td>{{ reserva.fecha_reserva | date:'dd/MM/yyyy' }}</td>
+            <td>{{ reserva.estado }}</td>
+            <td>{{ reserva.cantidad_estudiantes }}</td>
+            <td>{{ reserva.total_pagar | currency:'CLP':'symbol':'1.0-0' }}</td>
+          </tr>
+          <tr *ngIf="!reservasTable.recent.length">
+            <td colspan="6" class="empty-state">No hay movimientos recientes.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </article>
+</section>
+
+<section class="dashboard-section species-dashboard">
+  <div class="dashboard__header">
+    <div>
+      <p class="eyebrow">Análisis de datos</p>
+      <h2>Monitoreo en vivo de especies</h2>
+      <p class="muted">
+        KPIs conectadas directamente a la tabla <code>especies</code>.
+        <span *ngIf="lastUpdated() as updated">
+          Última actualización: {{ updated | date:'short' }}
+        </span>
+      </p>
+    </div>
+    <button class="refresh-btn" type="button" (click)="loadDashboard()" [disabled]="loading()">
+      <span *ngIf="!loading(); else refreshing">Actualizar</span>
+      <ng-template #refreshing>Actualizando...</ng-template>
+    </button>
+  </div>
+
+  <div *ngIf="error()" class="dashboard__alert">
+    {{ error() }}
+  </div>
+
+  <div class="kpi-grid" *ngIf="dashboard() as data">
+    <article class="kpi-card kpi-card--primary">
+      <span class="kpi-label">Total de especies</span>
+      <strong class="kpi-value">{{ data.totals.overall }}</strong>
+      <p class="kpi-desc">Registros activos en la base.</p>
+    </article>
+
+    <article class="kpi-card">
+      <span class="kpi-label">Últimos 30 días</span>
+      <strong class="kpi-value">{{ data.totals.recent30 }}</strong>
+      <p class="kpi-desc">Nuevas altas recientes.</p>
+    </article>
+
+    <article class="kpi-card">
+      <span class="kpi-label">Hábitats distintos</span>
+      <strong class="kpi-value">{{ data.totals.habitats }}</strong>
+      <p class="kpi-desc">Variedad de ecosistemas registrados.</p>
+    </article>
+
+    <article
+      class="kpi-card kpi-card--type"
+      *ngFor="let card of typeCards"
+      [style.--kpi-color]="card.color">
+      <span class="kpi-label">{{ card.label }}</span>
+      <strong class="kpi-value">{{ typeCount(card.key) }}</strong>
+      <p class="kpi-desc">Tipo {{ card.key }}</p>
+    </article>
+  </div>
+
+  <div class="charts-grid">
+    <article class="chart-card">
+      <header>
+        <h3>Distribución por tipo</h3>
+        <p>Relación entre peces, mamíferos, aves y reptiles.</p>
+      </header>
+      <ng-container *ngIf="pieChartData().labels?.length; else noTypeData">
+        <canvas
+          baseChart
+          [data]="pieChartData()"
+          [options]="pieChartOptions"
+          [type]="'doughnut'">
+        </canvas>
+      </ng-container>
+      <ng-template #noTypeData>
+        <p class="empty-state">Sin datos de tipos para graficar.</p>
+      </ng-template>
+    </article>
+
+    <article class="chart-card">
+      <header>
+        <h3>Especies por hábitat</h3>
+        <p>Comparativa de entornos registrados.</p>
+      </header>
+      <ng-container *ngIf="habitatChartData().labels?.length; else noHabitatData">
+        <canvas
+          baseChart
+          [data]="habitatChartData()"
+          [options]="habitatChartOptions"
+          [type]="'bar'">
+        </canvas>
+      </ng-container>
+      <ng-template #noHabitatData>
+        <p class="empty-state">Aún no hay hábitats asociados.</p>
+      </ng-template>
+    </article>
+
+    <article class="chart-card chart-card--wide">
+      <header>
+        <h3>Evolución mensual</h3>
+        <p>Altas de especies registradas por mes.</p>
+      </header>
+      <ng-container *ngIf="speciesMonthlyChartData().labels?.length; else noMonthlyData">
+        <canvas
+          baseChart
+          [data]="speciesMonthlyChartData()"
+          [options]="speciesMonthlyOptions"
+          [type]="'line'">
+        </canvas>
+      </ng-container>
+      <ng-template #noMonthlyData>
+        <p class="empty-state">No hay historial mensual para mostrar.</p>
+      </ng-template>
+    </article>
+  </div>
+
+  <article class="table-card" *ngIf="dashboard() as dataList">
+    <header>
+      <div>
+        <p class="eyebrow">Listado base</p>
+        <h3>Especies recientes</h3>
+      </div>
+    </header>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre común</th>
+            <th>Tipo</th>
+            <th>Hábitat</th>
+            <th>Conservación</th>
+            <th>Registro</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let especie of dataList.list; trackBy: trackSpecies">
+            <td>{{ especie.nombre_comun }}</td>
+            <td>{{ mapTypeLabel(especie.tipo) }}</td>
+            <td>{{ especie.habitat }}</td>
+            <td>{{ especie.estado_conservacion }}</td>
+            <td>{{ especie.fecha_registro | date:'dd/MM/yyyy HH:mm' }}</td>
+          </tr>
+          <tr *ngIf="!dataList.list.length">
+            <td colspan="5" class="empty-state">No hay especies registradas.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </article>
+</section>
