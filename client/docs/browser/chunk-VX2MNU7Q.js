@@ -1,1 +1,0 @@
-import"./chunk-7CGTOI24.js";var o=[{path:"",loadComponent:()=>import("./chunk-BZQWVU4T.js").then(e=>e.PedagogicalReservationsComponent),title:"Reservas Educativas"}],t=o;export{t as default,o as pedagogicalReservationsRoutes};
