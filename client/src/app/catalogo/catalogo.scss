@@ -1,0 +1,236 @@
+:root{
+  --azul:#184f86;
+  --azul2:#123a66;
+  --naranjo:#f27a3a;
+  --verde:#2f7a5c;
+  --cielo:#eaf2fb;
+  --blanco:#fff;
+  --texto:#0f172a;
+}
+
+.fauna{
+  background:linear-gradient(180deg,var(--cielo) 0%,#f8fbff 100%);
+  padding:40px 0 64px;
+  font-family:'Montserrat',sans-serif;
+}
+
+.titulo{
+  margin:0 0 22px;
+  text-align:center;
+  color:var(--azul);
+  font-weight:900;
+  font-size:clamp(28px,3vw,36px);
+  font-family:'Montserrat',sans-serif;
+}
+
+.acordeon{
+  max-width:1200px;
+  margin:0 auto;
+}
+
+.cabecera{
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  background:#fff;
+  border:none;
+  border-radius:14px;
+  padding:14px 18px;
+  box-shadow:0 12px 28px rgba(16,40,80,.08);
+  cursor:pointer;
+  font-family:'Montserrat',sans-serif;
+}
+.cabecera__chip{
+  font-family:'Montserrat',sans-serif;
+  width:10px;
+  height:26px;
+  border-radius:8px;
+  background:linear-gradient(180deg,var(--azul),var(--azul2));
+}
+.cabecera__titulo{
+  color:var(--azul);
+  font-weight:900;
+  text-transform:uppercase;
+}
+.cabecera__badge{
+  margin-left:auto;
+  margin-right:8px;
+  background:linear-gradient(180deg,var(--naranjo),#ff995e);
+  color:#fff;
+  border-radius:999px;
+  padding:4px 12px;
+  font-weight:800;
+}
+.cabecera__icono{
+  font-size:20px;
+  color:var(--azul2);
+}
+.panel{
+  padding-top:14px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:26px;
+}
+@media (max-width:900px){
+  .grid{grid-template-columns:1fr;}
+}
+
+.flyer{
+  position:relative;
+  display:grid;
+  grid-template-columns:220px 1fr;
+  align-items:center;
+  gap:22px;
+  background:#fff;
+  border-radius:14px;
+  box-shadow:0 10px 24px rgba(13,41,78,.12);
+  overflow:hidden;
+  padding:26px 24px;
+  min-height:320px;
+  transition:transform .25s ease, box-shadow .25s ease;
+}
+.flyer:hover{
+  transform:translateY(-6px);
+  box-shadow:0 18px 36px rgba(13,41,78,.16);
+}
+@media (max-width:900px){
+  .flyer{grid-template-columns:1fr;padding:24px 20px;}
+}
+
+.curve{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:86px;
+  background:linear-gradient(90deg,#dfeaf7 0%,#e8f2ff 60%,#dfeaf7 100%);
+  clip-path:path("M0,0 L100%,0 L100%,60 Q60%,86 20%,60 L0,86 Z");
+  opacity:.55;
+  z-index:1;
+}
+
+.leaf{
+  position:absolute;
+  left:-50px;
+  top:-10px;
+  width:130px;
+  height:130px;
+  background:var(--verde);
+  border-radius:60% 40% 70% 30% / 50% 70% 30% 50%;
+  transform:rotate(-18deg);
+  opacity:.9;
+  z-index:2;
+}
+
+.blob{
+  position:absolute;
+  right:-40px;
+  bottom:-30px;
+  width:120px;
+  height:120px;
+  background:var(--azul2);
+  border-radius:60% 40% 70% 30% / 50% 70% 30% 50%;
+  transform:rotate(12deg);
+  opacity:.8;
+  z-index:2;
+}
+
+.sun{
+  position:absolute;
+  right:-60px;
+  bottom:-60px;
+  width:180px;
+  height:180px;
+  border-radius:50%;
+  background:var(--naranjo);
+  filter:drop-shadow(0 10px 22px rgba(242,122,58,.3));
+  opacity:.9;
+  z-index:2;
+}
+
+.flyer__img{
+  position:relative;
+  z-index:3;
+  width:200px;
+  height:220px;
+  border-radius:50% / 46%;
+  overflow:hidden;
+  border:6px solid var(--azul);
+  background:#fff;
+  box-shadow:0 8px 20px rgba(0,0,0,.15);
+  margin:0;
+  justify-self:center;
+}
+.flyer__img img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.flyer__body{
+  position:relative;
+  z-index:3;
+  color:var(--texto);
+  width:100%;
+}
+.flyer__title{
+  margin:0 0 6px 0;
+  color:var(--azul);
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.5px;
+  font-size:clamp(20px,2.2vw,26px);
+}
+.flyer__sci{
+  margin:4px 0 12px;
+  color:#3a567a;
+  font-style:italic;
+  font-size:15px;
+}
+.flyer__body p{
+  margin:8px 0;
+  font-size:15px;
+  line-height:1.6;
+}
+.flyer__body p span{
+  color:var(--azul);
+  font-weight:900;
+}
+
+.flyer::after{
+  content:"";
+  position:absolute;
+  top:12px;
+  left:16px;
+  width:120px;
+  height:26px;
+  pointer-events:none;
+  z-index:4;
+  background:
+    radial-gradient(circle at 13px 13px, var(--azul) 0 8px, transparent 9px),
+    radial-gradient(circle at 43px 13px, var(--naranjo) 0 8px, transparent 9px),
+    radial-gradient(circle at 73px 13px, var(--verde) 0 8px, transparent 9px),
+    radial-gradient(circle at 103px 13px, #7bc2dd 0 8px, transparent 9px);
+  opacity:.95;
+}
+
+.flyer::before{
+  content:"";
+  position:absolute;
+  right:16px;
+  bottom:16px;
+  width:96px;
+  height:22px;
+  pointer-events:none;
+  z-index:4;
+  background:
+    radial-gradient(circle at 12px 11px, #7bc2dd 0 7px, transparent 8px),
+    radial-gradient(circle at 38px 11px, var(--verde) 0 7px, transparent 8px),
+    radial-gradient(circle at 64px 11px, var(--naranjo) 0 7px, transparent 8px),
+    radial-gradient(circle at 90px 11px, var(--azul) 0 7px, transparent 8px);
+  opacity:.9;
+}
